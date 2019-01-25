@@ -48,9 +48,14 @@ module Knock
       _claims = {}
       _claims[:exp] = token_lifetime if verify_lifetime?
       _claims[:aud] = token_audience if verify_audience?
+      _claims[:iat] = token_issued_at
       _claims
     end
 
+    def token_issued_at
+      Time.now.to_i
+    end
+    
     def token_lifetime
       Knock.token_lifetime.from_now.to_i if verify_lifetime?
     end
