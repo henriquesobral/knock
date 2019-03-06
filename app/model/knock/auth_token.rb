@@ -10,9 +10,10 @@ module Knock
         @payload, _ = JWT.decode token.to_s, decode_key, true, options.merge(verify_options)
         @token = token
       else
+        secret = verify_options.key?(:sig_key) && verify_options[:sig_key].present? ? verify_options[:sig_key].call : secret_key
         @payload = claims.merge(payload)
         @token = JWT.encode @payload,
-          secret_key,
+          secret,
           Knock.token_signature_algorithm
       end
     end
