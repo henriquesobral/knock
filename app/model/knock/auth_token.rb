@@ -15,7 +15,7 @@ module Knock
         @payload = claims.merge(payload)
         @token = JWT.encode @payload,
           secret,
-          Knock.token_signature_algorithm
+          verify_options[:algorithm].present? ? verify_options[:algorithm] : Knock.token_signature_algorithm
       end
     end
 
