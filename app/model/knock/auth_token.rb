@@ -7,7 +7,8 @@ module Knock
 
     def initialize payload: {}, token: nil, verify_options: {}
       if token.present?
-        @payload, _ = JWT.decode token.to_s, decode_key, true, options.merge(verify_options)
+        secret = verify_options.key?(:sig_key) && verify_options[:sig_key].present? ? verify_options[:sig_key].call : decode_key
+        @payload, _ = JWT.decode token.to_s, secret, true, options.merge(verify_options)
         @token = token
       else
         secret = verify_options.key?(:sig_key) && verify_options[:sig_key].present? ? verify_options[:sig_key].call : secret_key
